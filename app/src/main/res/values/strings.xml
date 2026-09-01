@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Podcasts</string>
+
+    <string name="tab_home">Home</string>
+    <string name="tab_explore">Explore</string>
+    <string name="tab_activity">Activity</string>
+
+    <string name="new_episodes">New episodes</string>
+    <string name="new_episodes_count">%1$d new episodes</string>
+    <string name="channel_new_episodes">New episodes</string>
+
+    <string name="subscribe">Subscribe</string>
+    <string name="subscribed">Subscribed</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="download">Download</string>
+    <string name="add_to_queue">Add to queue</string>
+    <string name="sleep_timer">Sleep timer</string>
+    <string name="playback_speed">Playback speed</string>
+</resources>

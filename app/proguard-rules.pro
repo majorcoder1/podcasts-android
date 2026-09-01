@@ -1,0 +1,3 @@
+-keep class com.podcasts.app.data.remote.dto.** { *; }
+-keepclassmembers class * { @androidx.media3.common.util.UnstableApi *; }
+-dontwarn org.xmlpull.v1.**
