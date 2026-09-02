@@ -15,6 +15,7 @@ import com.podcasts.app.data.repository.EpisodeRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -34,7 +35,9 @@ class PlaybackService : MediaSessionService() {
     @Inject lateinit var episodeRepository: EpisodeRepository
     @Inject lateinit var settingsStore: SettingsStore
 
-    private val scope = CoroutineScope(SupervisorJob())
+    // ExoPlayer must only be touched on its application thread, which is main here.
+    // Repository calls inside this scope are suspend functions that dispatch off it.
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private var session: MediaSession? = null
     private var progressJob: Job? = null
 
