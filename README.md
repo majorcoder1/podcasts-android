@@ -7,6 +7,11 @@ This is original code. Google Podcasts was never open source and none of its cod
 assets, or branding are used here — this repo rebuilds the same app from its
 observable behaviour, on top of RSS, which is what the original ran on too.
 
+The launcher icon is an original mark — five rounded waveform bars in the app's
+blue ramp — with an adaptive-icon foreground, a monochrome layer for Android 13+
+themed icons, and a legacy vector for API 24-25. Google's own logo is a
+registered trademark and is deliberately not reproduced.
+
 ## What it does
 
 **Shell** — three bottom tabs (Home, Explore, Activity) with the mini player docked
