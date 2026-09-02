@@ -1,27 +1,24 @@
-<!--
-  Original mark: five rounded bars as an audio waveform, in the app's blue ramp.
-  Drawn in the 108x108 adaptive-icon space; the bars stay inside the 66x66 safe
-  zone (x 24..84, y 24..84) so no launcher mask clips them.
--->
+<!-- Themed-icon layer (Android 13+). The system recolors this, so shape only. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
-    android:viewportHeight="108">
+    android:viewportHeight="108"
+    android:tint="#000000">
 
     <path
-        android:fillColor="#A8C7FA"
+        android:fillColor="#FF000000"
         android:pathData="M28,44 a4,4 0 0,1 4,4 v12 a4,4 0 0,1 -4,4 a4,4 0 0,1 -4,-4 v-12 a4,4 0 0,1 4,-4 z" />
     <path
-        android:fillColor="#4C8DF6"
+        android:fillColor="#FF000000"
         android:pathData="M41,32 a4,4 0 0,1 4,4 v36 a4,4 0 0,1 -4,4 a4,4 0 0,1 -4,-4 v-36 a4,4 0 0,1 4,-4 z" />
     <path
-        android:fillColor="#1A73E8"
+        android:fillColor="#FF000000"
         android:pathData="M54,24 a4,4 0 0,1 4,4 v52 a4,4 0 0,1 -4,4 a4,4 0 0,1 -4,-4 v-52 a4,4 0 0,1 4,-4 z" />
     <path
-        android:fillColor="#669DF6"
+        android:fillColor="#FF000000"
         android:pathData="M67,36 a4,4 0 0,1 4,4 v28 a4,4 0 0,1 -4,4 a4,4 0 0,1 -4,-4 v-28 a4,4 0 0,1 4,-4 z" />
     <path
-        android:fillColor="#A8C7FA"
+        android:fillColor="#FF000000"
         android:pathData="M80,42 a4,4 0 0,1 4,4 v16 a4,4 0 0,1 -4,4 a4,4 0 0,1 -4,-4 v-16 a4,4 0 0,1 4,-4 z" />
 </vector>
