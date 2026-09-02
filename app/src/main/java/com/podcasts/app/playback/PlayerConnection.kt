@@ -16,6 +16,7 @@ import com.podcasts.app.domain.PLAYBACK_SPEEDS
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
@@ -39,7 +40,8 @@ class PlayerConnection @Inject constructor(
     private val settingsStore: SettingsStore,
 ) {
 
-    private val scope = CoroutineScope(SupervisorJob())
+    // MediaController, like the player it drives, is single-threaded on main.
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val _state = MutableStateFlow(NowPlaying())
     val state: StateFlow<NowPlaying> = _state.asStateFlow()
 
