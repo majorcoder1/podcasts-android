@@ -73,16 +73,26 @@ class SearchApi @Inject constructor(
     private fun request(url: String): List<SearchResult> {
         return client.newCall(Request.Builder().url(url).build()).execute().use { response ->
             if (!response.isSuccessful) return emptyList()
-            val payload = json.decodeFromString<ITunesResponse>(response.body?.string().orEmpty())
-            payload.results.mapNotNull { it.toDomain() }
+            parseResults(response.body?.string().orEmpty())
         }
     }
 
-    @Serializable
-    private data class ITunesResponse(val results: List<ITunesPodcast> = emptyList())
+    /**
+     * A feed URL is the show's identity, so a result list must never carry it
+     * twice — the directory does return the same show under more than one
+     * collection, and Explore keys its grid by it.
+     */
+    internal fun parseResults(payload: String): List<SearchResult> {
+        val decoded = runCatching { json.decodeFromString<ITunesResponse>(payload) }
+            .getOrElse { return emptyList() }
+        return decoded.results.mapNotNull { it.toDomain() }.distinctBy { it.feedUrl }
+    }
 
     @Serializable
-    private data class ITunesPodcast(
+    internal data class ITunesResponse(val results: List<ITunesPodcast> = emptyList())
+
+    @Serializable
+    internal data class ITunesPodcast(
         val feedUrl: String? = null,
         @SerialName("collectionName") val name: String? = null,
         @SerialName("artistName") val artist: String? = null,
