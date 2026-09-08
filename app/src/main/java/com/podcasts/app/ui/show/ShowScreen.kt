@@ -91,7 +91,7 @@ fun ShowScreen(
                     )
                     DropdownMenuItem(
                         text = { Text("Refresh") },
-                        onClick = { viewModel.load(); menuOpen = false },
+                        onClick = { viewModel.forceRefresh(); menuOpen = false },
                     )
                 }
             },

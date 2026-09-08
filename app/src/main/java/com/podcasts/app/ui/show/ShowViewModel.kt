@@ -68,6 +68,17 @@ class ShowViewModel @Inject constructor(
         }
     }
 
+    /** Menu > Refresh: ignore the cached validators and re-read the whole feed. */
+    fun forceRefresh() {
+        viewModelScope.launch {
+            loading.value = true
+            error.value = null
+            runCatching { repository.refresh(feedUrl, useCache = false) }
+                .onFailure { error.value = "Couldn't refresh this show." }
+            loading.value = false
+        }
+    }
+
     fun toggleSubscription() {
         val current = uiState.value.podcast ?: return
         viewModelScope.launch {

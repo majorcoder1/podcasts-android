@@ -11,3 +11,7 @@ local.properties
 *.aab
 /app/schemas/
 .kotlin/
+
+# Signing material - never commit these.
+release.keystore
+keystore.properties

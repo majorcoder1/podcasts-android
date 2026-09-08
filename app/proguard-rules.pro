@@ -1,3 +1,36 @@
--keep class com.podcasts.app.data.remote.dto.** { *; }
--keepclassmembers class * { @androidx.media3.common.util.UnstableApi *; }
+# R8 runs on release builds. Anything reached only by reflection has to be
+# named here or it gets stripped and fails at runtime, not at build time.
+
+# kotlinx.serialization generates a $$serializer for each @Serializable class
+# and looks it up reflectively.
+-keepattributes *Annotation*, InnerClasses
+-dontnote kotlinx.serialization.**
+-keepclassmembers class kotlinx.serialization.json.** { *** Companion; }
+-keepclasseswithmembers class kotlinx.serialization.json.** {
+    kotlinx.serialization.KSerializer serializer(...);
+}
+-keep,includedescriptorclasses class com.podcasts.app.**$$serializer { *; }
+-keepclassmembers class com.podcasts.app.** { *** Companion; }
+-keepclasseswithmembers class com.podcasts.app.** {
+    kotlinx.serialization.KSerializer serializer(...);
+}
+
+# Enum names cross the DB boundary: DownloadState is stored as a string and read
+# back with valueOf, so the constants must keep their names.
+-keepclassmembers enum com.podcasts.app.** {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+# Room entities are mapped by field name.
+-keep class com.podcasts.app.data.local.** { *; }
+
+# Media3 uses reflection to pick a renderer/extractor set.
+-dontwarn androidx.media3.**
+-keep class androidx.media3.exoplayer.** { *; }
+
 -dontwarn org.xmlpull.v1.**
+
+# Keep line numbers so a stack trace from a user is readable.
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
