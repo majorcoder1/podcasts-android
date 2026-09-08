@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Only these paths are backed up. Everything else is excluded by omission, so
+  downloaded audio under files/episodes/ never leaves the device - it would be
+  gigabytes of re-downloadable data.
+-->
 <full-backup-content>
     <include domain="database" path="podcasts.db" />
     <include domain="file" path="datastore/" />
-    <exclude domain="file" path="episodes/" />
 </full-backup-content>

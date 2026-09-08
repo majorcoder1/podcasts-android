@@ -98,7 +98,8 @@ class PodcastRepository @Inject constructor(
      * 304 Not Modified. New episodes are returned via [refreshAllSubscriptions].
      */
     suspend fun refresh(feedUrl: String, useCache: Boolean = true): Podcast? {
-        val parsed = feedService.fetch(feedUrl, useCache) ?: return null
+        val response = feedService.fetch(feedUrl, useCache) ?: return null
+        val parsed = response.parsed
         val existing = podcastDao.get(feedUrl)
         val merged = parsed.podcast.copy(
             isSubscribed = existing?.isSubscribed ?: false,
@@ -109,6 +110,9 @@ class PodcastRepository @Inject constructor(
         )
         podcastDao.upsert(merged.toEntity(subscribedAt = existing?.subscribedAt ?: 0L))
         mergeEpisodes(parsed.episodes)
+        // Only now that the episodes are committed is it safe to remember the
+        // validators; otherwise a later 304 would hide episodes we never stored.
+        feedService.commitValidators(feedUrl, response.etag, response.lastModified)
         return merged
     }
 
@@ -117,10 +121,15 @@ class PodcastRepository @Inject constructor(
         podcastDao.subscriptions().map { podcast ->
             async {
                 runCatching {
-                    val parsed = feedService.fetch(podcast.feedUrl)
+                    val response = feedService.fetch(podcast.feedUrl)
                         ?: return@runCatching emptyList<Episode>()
-                    val fresh = mergeEpisodes(parsed.episodes)
+                    val fresh = mergeEpisodes(response.parsed.episodes)
                     podcastDao.markRefreshed(podcast.feedUrl, System.currentTimeMillis())
+                    feedService.commitValidators(
+                        podcast.feedUrl,
+                        response.etag,
+                        response.lastModified,
+                    )
                     fresh
                 }.getOrDefault(emptyList())
             }

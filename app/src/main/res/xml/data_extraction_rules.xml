@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Subscriptions and playback positions travel; downloaded audio does not. An
+  <include> list is exhaustive, so files/episodes/ is left out by omission.
+-->
 <data-extraction-rules>
     <cloud-backup>
         <include domain="database" path="podcasts.db" />
         <include domain="file" path="datastore/" />
-        <exclude domain="file" path="episodes/" />
     </cloud-backup>
     <device-transfer>
         <include domain="database" path="podcasts.db" />
