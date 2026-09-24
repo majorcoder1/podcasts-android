@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Long-press the launcher icon. Each shortcut names the activity explicitly
+  (targetPackage + targetClass) rather than going through an intent filter, so
+  this adds no new surface that other apps can reach.
+-->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <shortcut
+        android:shortcutId="resume"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_play"
+        android:shortcutShortLabel="@string/shortcut_resume_short"
+        android:shortcutLongLabel="@string/shortcut_resume_long">
+        <intent
+            android:action="com.podcasts.app.action.RESUME"
+            android:targetPackage="com.podcasts.app"
+            android:targetClass="com.podcasts.app.ui.MainActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="new_episodes"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_new"
+        android:shortcutShortLabel="@string/shortcut_new_short"
+        android:shortcutLongLabel="@string/shortcut_new_long">
+        <intent
+            android:action="com.podcasts.app.action.NEW_EPISODES"
+            android:targetPackage="com.podcasts.app"
+            android:targetClass="com.podcasts.app.ui.MainActivity" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="queue"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_queue"
+        android:shortcutShortLabel="@string/shortcut_queue_short"
+        android:shortcutLongLabel="@string/shortcut_queue_long">
+        <intent
+            android:action="com.podcasts.app.action.QUEUE"
+            android:targetPackage="com.podcasts.app"
+            android:targetClass="com.podcasts.app.ui.MainActivity" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="explore"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_explore"
+        android:shortcutShortLabel="@string/shortcut_explore_short"
+        android:shortcutLongLabel="@string/shortcut_explore_long">
+        <intent
+            android:action="com.podcasts.app.action.EXPLORE"
+            android:targetPackage="com.podcasts.app"
+            android:targetClass="com.podcasts.app.ui.MainActivity" />
+    </shortcut>
+</shortcuts>

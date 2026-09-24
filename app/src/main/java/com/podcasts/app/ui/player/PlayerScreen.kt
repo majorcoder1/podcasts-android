@@ -62,6 +62,7 @@ fun PlayerScreen(
     onShowClick: (String) -> Unit,
 ) {
     val nowPlaying by playerViewModel.nowPlaying.collectAsStateWithLifecycle()
+    val show by playerViewModel.currentShow.collectAsStateWithLifecycle()
     val episode = nowPlaying.episode
 
     var speedDialogOpen by remember { mutableStateOf(false) }
@@ -104,7 +105,7 @@ fun PlayerScreen(
             ) {
                 Spacer(Modifier.height(16.dp))
                 ShowArt(
-                    imageUrl = episode.imageUrl,
+                    imageUrl = show?.imageUrl ?: episode.imageUrl,
                     contentDescription = episode.title,
                     modifier = Modifier.fillMaxWidth(0.85f),
                     cornerRadius = 12.dp,
@@ -122,7 +123,7 @@ fun PlayerScreen(
                 Spacer(Modifier.height(4.dp))
                 TextButton(onClick = { onShowClick(episode.feedUrl) }) {
                     Text(
-                        text = "Go to show",
+                        text = show?.title ?: "Go to show",
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary,
                     )

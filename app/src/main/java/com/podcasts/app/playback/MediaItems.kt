@@ -10,7 +10,10 @@ import com.podcasts.app.domain.Episode
 fun Episode.playbackUri(): String =
     if (downloadState == DownloadState.DOWNLOADED && localPath != null) localPath else audioUrl
 
-fun Episode.toMediaItem(showTitle: String? = null): MediaItem = MediaItem.Builder()
+fun Episode.toMediaItem(
+    showTitle: String? = null,
+    showArtworkUrl: String? = null,
+): MediaItem = MediaItem.Builder()
     .setMediaId(guid)
     .setUri(playbackUri())
     .setMediaMetadata(
@@ -18,7 +21,7 @@ fun Episode.toMediaItem(showTitle: String? = null): MediaItem = MediaItem.Builde
             .setTitle(title)
             .setArtist(showTitle ?: "")
             .setAlbumTitle(showTitle ?: "")
-            .setArtworkUri(imageUrl?.toUri())
+            .setArtworkUri((showArtworkUrl ?: imageUrl)?.toUri())
             .setIsBrowsable(false)
             .setIsPlayable(true)
             .setMediaType(MediaMetadata.MEDIA_TYPE_PODCAST_EPISODE)

@@ -19,3 +19,6 @@ object Routes {
     const val EPISODE = "$EPISODE_BASE/{guid}"
     fun episode(guid: String) = "$EPISODE_BASE/${Uri.encode(guid)}"
 }
+
+/** What a launcher long-press asked for. */
+enum class Shortcut { RESUME, NEW_EPISODES, QUEUE, EXPLORE }

@@ -18,4 +18,13 @@
     <string name="add_to_queue">Add to queue</string>
     <string name="sleep_timer">Sleep timer</string>
     <string name="playback_speed">Playback speed</string>
+
+    <string name="shortcut_resume_short">Resume</string>
+    <string name="shortcut_resume_long">Resume where you left off</string>
+    <string name="shortcut_new_short">New episodes</string>
+    <string name="shortcut_new_long">See new episodes</string>
+    <string name="shortcut_queue_short">Queue</string>
+    <string name="shortcut_queue_long">Open your queue</string>
+    <string name="shortcut_explore_short">Explore</string>
+    <string name="shortcut_explore_long">Find a show</string>
 </resources>

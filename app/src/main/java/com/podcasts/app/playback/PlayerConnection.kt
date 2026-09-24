@@ -56,7 +56,24 @@ class PlayerConnection @Inject constructor(
         newController.addListener(ControllerListener())
         controller = newController
         startTicker()
+
+        // The process gets reclaimed a while after playback pauses. Put the
+        // last episode back in the player so the mini player is still there,
+        // without loading any audio - that waits until play is actually tapped.
+        if (newController.currentMediaItem == null) restoreLastPlayed()
+
         publish()
+    }
+
+    private suspend fun restoreLastPlayed() {
+        val episode = episodeRepository.lastPlayed() ?: return
+        _state.value = _state.value.copy(
+            episode = episode,
+            isPlaying = false,
+            isBuffering = false,
+            positionMs = episode.positionMs,
+            durationMs = episode.durationMs,
+        )
     }
 
     fun release() {
@@ -67,7 +84,7 @@ class PlayerConnection @Inject constructor(
     }
 
     /** Tapping an episode anywhere in the app lands here. */
-    fun play(episode: Episode, showTitle: String? = null) {
+    fun play(episode: Episode, showTitle: String? = null, showArtworkUrl: String? = null) {
         val player = controller ?: return
         if (player.currentMediaItem?.mediaId == episode.guid) {
             player.play()
@@ -75,7 +92,7 @@ class PlayerConnection @Inject constructor(
         }
         scope.launch {
             val config = settingsStore.settings.first()
-            player.setMediaItem(episode.toMediaItem(showTitle))
+            player.setMediaItem(episode.toMediaItem(showTitle, showArtworkUrl))
             player.prepare()
             if (episode.hasStarted) player.seekTo(episode.positionMs)
             player.setPlaybackSpeed(config.defaultSpeed)
@@ -86,6 +103,13 @@ class PlayerConnection @Inject constructor(
 
     fun playPause() {
         val player = controller ?: return
+        val restored = state.value.episode
+        // After a restore the player holds no media yet, so the first tap has
+        // to load the episode rather than resume a stream that is not there.
+        if (player.currentMediaItem == null && restored != null) {
+            play(restored)
+            return
+        }
         if (player.isPlaying) player.pause() else player.play()
         publish()
     }
@@ -169,6 +193,13 @@ class PlayerConnection @Inject constructor(
         val player = controller ?: return
         scope.launch {
             val guid = player.currentMediaItem?.mediaId
+            if (guid == null && known == null) {
+                // Nothing is loaded. This happens right after a restore, and
+                // reading position and duration off an empty player here would
+                // wipe the episode we just put back.
+                _state.value = _state.value.copy(isPlaying = false, isBuffering = false)
+                return@launch
+            }
             val episode = known ?: guid?.let { episodeRepository.get(it) }
             _state.value = _state.value.copy(
                 episode = episode,

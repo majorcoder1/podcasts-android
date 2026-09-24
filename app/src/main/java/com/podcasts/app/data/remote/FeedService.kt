@@ -53,7 +53,7 @@ class FeedService @Inject constructor(
                     !response.isSuccessful ->
                         throw FeedException("HTTP ${response.code} for $feedUrl")
                     else -> {
-                        val body = response.body ?: throw FeedException("Empty body for $feedUrl")
+                        val body = response.body
                         FeedResponse(
                             parsed = parser.parse(feedUrl, body.byteStream()),
                             etag = response.header("ETag"),

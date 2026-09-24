@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Feeds and audio are fetched from arbitrary third-party servers, so the
+  transport policy is stated here rather than inherited from whatever the
+  platform happens to default to for the current targetSdk.
+
+  Cleartext is off: a plain-HTTP feed could be rewritten in transit to point
+  playback at an attacker's audio, and the enclosure URLs inside it are exactly
+  what the player will fetch next.
+
+  Only system CAs are trusted in release. Debug additionally trusts user CAs so
+  a local proxy can still be used while developing.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>
