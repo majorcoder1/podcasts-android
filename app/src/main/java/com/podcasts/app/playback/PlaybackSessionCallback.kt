@@ -1,5 +1,6 @@
 package com.podcasts.app.playback
 
+import android.os.Process
 import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaSession
@@ -15,10 +16,21 @@ import com.google.common.util.concurrent.ListenableFuture
 @OptIn(UnstableApi::class)
 class PlaybackSessionCallback : MediaSession.Callback {
 
+    /**
+     * The service is exported - it has to be, or the notification, Bluetooth
+     * controls and Android Auto could not reach it. Exported means any app on
+     * the device can try to bind, so connections are vetted here instead of
+     * being accepted blindly: an unvetted session hands a stranger both
+     * playback control and a live feed of what is being listened to.
+     */
     override fun onConnect(
         session: MediaSession,
         controller: MediaSession.ControllerInfo,
     ): MediaSession.ConnectionResult {
+        if (!isTrusted(session, controller)) {
+            return MediaSession.ConnectionResult.reject()
+        }
+
         val commands = MediaSession.ConnectionResult.DEFAULT_SESSION_COMMANDS.buildUpon()
             .add(SessionCommand(ACTION_SET_SPEED, android.os.Bundle.EMPTY))
             .add(SessionCommand(ACTION_SET_SKIP_SILENCE, android.os.Bundle.EMPTY))
@@ -27,6 +39,22 @@ class PlaybackSessionCallback : MediaSession.Callback {
             .setAvailableSessionCommands(commands)
             .build()
     }
+
+    /**
+     * Trusted means: this app's own UI (same UID, which is a stronger check
+     * than comparing package names), the platform itself (media buttons,
+     * headset and Bluetooth controls all arrive as the system UID), or one of
+     * the companions Media3 recognises for the notification, Auto and
+     * Automotive surfaces. Everything else is a third-party app and is refused.
+     */
+    private fun isTrusted(
+        session: MediaSession,
+        controller: MediaSession.ControllerInfo,
+    ): Boolean = controller.uid == Process.myUid() ||
+        controller.uid == Process.SYSTEM_UID ||
+        session.isMediaNotificationController(controller) ||
+        session.isAutoCompanionController(controller) ||
+        session.isAutomotiveController(controller)
 
     override fun onCustomCommand(
         session: MediaSession,

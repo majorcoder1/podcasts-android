@@ -21,6 +21,9 @@ class EpisodeRepository @Inject constructor(
 
     suspend fun get(guid: String): Episode? = episodeDao.get(guid)?.toDomain()
 
+    /** The episode to put back in the player after the process was killed. */
+    suspend fun lastPlayed(): Episode? = episodeDao.mostRecentlyPlayed()?.toDomain()
+
     fun queue(): Flow<List<Episode>> = queueDao.observeQueue().map { it.toDomainEpisodes() }
 
     fun isQueued(guid: String): Flow<Boolean> = queueDao.observeIsQueued(guid)

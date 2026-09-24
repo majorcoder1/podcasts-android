@@ -16,6 +16,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -55,10 +56,29 @@ private enum class TopLevel(
  * above them, exactly the shell the original app used.
  */
 @Composable
-fun PodcastsApp() {
+fun PodcastsApp(
+    shortcut: Shortcut? = null,
+    onShortcutHandled: () -> Unit = {},
+) {
     val navController = rememberNavController()
     val playerViewModel: PlayerViewModel = hiltViewModel()
     val nowPlaying by playerViewModel.nowPlaying.collectAsStateWithLifecycle()
+
+    // Launcher shortcuts. Resume starts the last episode rather than just
+    // opening a screen, which is the whole point of that one.
+    LaunchedEffect(shortcut) {
+        when (shortcut) {
+            null -> return@LaunchedEffect
+            Shortcut.RESUME -> {
+                playerViewModel.resumeLastPlayed()
+                navController.navigate(Routes.PLAYER)
+            }
+            Shortcut.NEW_EPISODES -> navController.navigate(Routes.HOME)
+            Shortcut.QUEUE -> navController.navigate(Routes.ACTIVITY)
+            Shortcut.EXPLORE -> navController.navigate(Routes.EXPLORE)
+        }
+        onShortcutHandled()
+    }
 
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination

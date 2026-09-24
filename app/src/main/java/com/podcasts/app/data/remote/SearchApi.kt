@@ -60,7 +60,7 @@ class SearchApi @Inject constructor(
     private fun chartNames(url: String): List<String> {
         return client.newCall(Request.Builder().url(url).build()).execute().use { response ->
             if (!response.isSuccessful) return emptyList()
-            val feed = json.parseToJsonElement(response.body?.string().orEmpty())
+            val feed = json.parseToJsonElement(response.body.string())
                 .jsonObject["feed"]?.jsonObject ?: return emptyList()
             val entries = feed["entry"]?.jsonArray ?: return emptyList()
             entries.mapNotNull { entry ->
@@ -73,7 +73,7 @@ class SearchApi @Inject constructor(
     private fun request(url: String): List<SearchResult> {
         return client.newCall(Request.Builder().url(url).build()).execute().use { response ->
             if (!response.isSuccessful) return emptyList()
-            parseResults(response.body?.string().orEmpty())
+            parseResults(response.body.string())
         }
     }
 

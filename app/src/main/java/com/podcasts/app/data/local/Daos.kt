@@ -88,6 +88,21 @@ interface EpisodeDao {
     )
     fun observeInProgress(limit: Int): Flow<List<EpisodeEntity>>
 
+    /**
+     * What was playing when the app was last alive. Android reclaims the
+     * process a while after playback pauses, so without this the player comes
+     * back empty and you have to go and find your episode again.
+     */
+    @Query(
+        """
+        SELECT * FROM episodes
+        WHERE positionMs > 0 AND isCompleted = 0 AND isArchived = 0
+        ORDER BY lastPlayedAt DESC
+        LIMIT 1
+        """,
+    )
+    suspend fun mostRecentlyPlayed(): EpisodeEntity?
+
     @Query("SELECT * FROM episodes WHERE downloadState = 'DOWNLOADED' ORDER BY publishedAt DESC")
     fun observeDownloads(): Flow<List<EpisodeEntity>>
 

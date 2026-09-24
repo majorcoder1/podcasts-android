@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Podcasts" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="Theme.Podcasts" parent="android:Theme.Material.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <!-- Painted during cold start, before the first Compose frame. It must
-             match the app's own background or the launch flashes. -->
         <item name="android:windowBackground">@color/window_background</item>
     </style>
 </resources>

@@ -48,7 +48,7 @@ class DownloadRepository @Inject constructor(
                 .build()
             client.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) error("HTTP ${response.code}")
-                val body = response.body ?: error("Empty body")
+                val body = response.body
                 target.sink().buffer().use { sink -> sink.writeAll(body.source()) }
             }
             target

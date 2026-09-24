@@ -99,7 +99,7 @@ fun ExploreScreen(
                 Icon(Icons.Outlined.RssFeed, contentDescription = null)
                 Spacer(Modifier.width(16.dp))
                 Column {
-                    Text("Open this RSS feed", style = MaterialTheme.typography.bodyLarge)
+                    Text("Open this feed URL", style = MaterialTheme.typography.bodyLarge)
                     Text(
                         text = state.query.trim(),
                         style = MaterialTheme.typography.bodySmall,
