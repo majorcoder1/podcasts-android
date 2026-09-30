@@ -30,8 +30,8 @@ android {
         applicationId = "com.podcasts.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 5
-        versionName = "1.0.6"
+        versionCode = 6
+        versionName = "1.0.7"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
