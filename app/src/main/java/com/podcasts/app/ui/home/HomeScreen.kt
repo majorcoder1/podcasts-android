@@ -27,6 +27,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
@@ -35,6 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.podcasts.app.domain.Episode
 import com.podcasts.app.domain.Podcast
+import com.podcasts.app.ui.components.EpisodeMenuSheet
 import com.podcasts.app.ui.components.EpisodeRow
 import com.podcasts.app.ui.components.ShowArt
 import com.podcasts.app.ui.player.PlayerViewModel
@@ -50,6 +54,27 @@ fun HomeScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val nowPlaying by playerViewModel.nowPlaying.collectAsStateWithLifecycle()
+    val queue by playerViewModel.queue.collectAsStateWithLifecycle()
+    val queuedGuids = remember(queue) { queue.mapTo(mutableSetOf()) { it.guid } }
+    var menuEpisode by remember { mutableStateOf<Episode?>(null) }
+
+    menuEpisode?.let { episode ->
+        EpisodeMenuSheet(
+            episode = episode,
+            showTitle = state.subscriptions.firstOrNull { it.feedUrl == episode.feedUrl }?.title,
+            inQueue = episode.guid in queuedGuids,
+            onPlayNext = { playerViewModel.addToQueue(episode, playNext = true) },
+            onToggleQueue = {
+                if (episode.guid in queuedGuids) playerViewModel.removeFromQueue(episode.guid)
+                else playerViewModel.addToQueue(episode)
+            },
+            onToggleDownload = { playerViewModel.toggleDownload(episode) },
+            onTogglePlayed = { playerViewModel.markPlayed(episode) },
+            onArchive = { playerViewModel.archive(episode) },
+            onGoToShow = { onShowClick(episode.feedUrl) },
+            onDismiss = { menuEpisode = null },
+        )
+    }
 
     Column(Modifier.fillMaxSize()) {
         TopAppBar(
@@ -78,21 +103,27 @@ fun HomeScreen(
             if (state.queue.isNotEmpty()) {
                 item { SectionHeader("Your queue", "${state.queue.size} episodes") }
                 items(state.queue.take(3), key = { "queue-${it.guid}" }) { episode ->
-                    HomeEpisode(episode, playerViewModel, nowPlaying.episode?.guid, onShowClick)
+                    HomeEpisode(episode, playerViewModel, nowPlaying.episode?.guid, onShowClick) {
+                        menuEpisode = it
+                    }
                 }
             }
 
             if (state.continueListening.isNotEmpty()) {
                 item { SectionHeader("Continue listening") }
                 items(state.continueListening, key = { "progress-${it.guid}" }) { episode ->
-                    HomeEpisode(episode, playerViewModel, nowPlaying.episode?.guid, onShowClick)
+                    HomeEpisode(episode, playerViewModel, nowPlaying.episode?.guid, onShowClick) {
+                        menuEpisode = it
+                    }
                 }
             }
 
             if (state.newEpisodes.isNotEmpty()) {
                 item { SectionHeader("New episodes") }
                 items(state.newEpisodes, key = { "new-${it.guid}" }) { episode ->
-                    HomeEpisode(episode, playerViewModel, nowPlaying.episode?.guid, onShowClick)
+                    HomeEpisode(episode, playerViewModel, nowPlaying.episode?.guid, onShowClick) {
+                        menuEpisode = it
+                    }
                 }
             }
 
@@ -107,6 +138,7 @@ private fun HomeEpisode(
     playerViewModel: PlayerViewModel,
     playingGuid: String?,
     onShowClick: (String) -> Unit,
+    onMenu: (Episode) -> Unit,
 ) {
     Column {
         EpisodeRow(
@@ -115,8 +147,7 @@ private fun HomeEpisode(
             onClick = { onShowClick(episode.feedUrl) },
             onPlayPause = { playerViewModel.toggle(episode) },
             onDownload = { playerViewModel.toggleDownload(episode) },
-            onAddToQueue = { playerViewModel.addToQueue(episode) },
-            onMore = { playerViewModel.markPlayed(episode) },
+            onMenu = { onMenu(episode) },
             showArtwork = true,
         )
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)

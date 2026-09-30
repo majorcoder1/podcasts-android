@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.outlined.AddToQueue
-import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.DownloadDone
 import androidx.compose.material.icons.outlined.Downloading
 import androidx.compose.material.icons.outlined.FileDownload
@@ -34,7 +32,10 @@ import com.podcasts.app.domain.Episode
 
 /**
  * The episode row from the original app: date, two-line title, then a footer of
- * play button + duration + download + overflow.
+ * play button + duration + download + menu.
+ *
+ * Queue and mark-played moved into the menu, so the three dots open one sheet
+ * with everything in it rather than sitting beside two shortcuts.
  */
 @Composable
 fun EpisodeRow(
@@ -43,8 +44,7 @@ fun EpisodeRow(
     onClick: () -> Unit,
     onPlayPause: () -> Unit,
     onDownload: () -> Unit,
-    onAddToQueue: () -> Unit,
-    onMore: () -> Unit,
+    onMenu: () -> Unit,
     modifier: Modifier = Modifier,
     showArtwork: Boolean = false,
     showTitle: String? = null,
@@ -132,14 +132,6 @@ fun EpisodeRow(
                 }
             }
 
-            IconButton(onClick = onAddToQueue, modifier = Modifier.size(36.dp)) {
-                Icon(
-                    imageVector = Icons.Outlined.AddToQueue,
-                    contentDescription = "Add to queue",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-
             IconButton(onClick = onDownload, modifier = Modifier.size(36.dp)) {
                 val (icon, description) = when (episode.downloadState) {
                     DownloadState.DOWNLOADED -> Icons.Outlined.DownloadDone to "Remove download"
@@ -158,13 +150,9 @@ fun EpisodeRow(
                 )
             }
 
-            IconButton(onClick = onMore, modifier = Modifier.size(36.dp)) {
+            IconButton(onClick = onMenu, modifier = Modifier.size(36.dp)) {
                 Icon(
-                    imageVector = if (episode.effectivelyFinished) {
-                        Icons.Outlined.CheckCircle
-                    } else {
-                        Icons.Outlined.MoreVert
-                    },
+                    imageVector = Icons.Outlined.MoreVert,
                     contentDescription = "More options",
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
