@@ -1,0 +1,5 @@
+An open-source podcast player that rebuilds the Google Podcasts experience on plain RSS.
+
+Home, Explore and Activity tabs, a mini player that expands to a full player, subscriptions, a queue, downloads, new-episode notifications, playback speed and sleep timer.
+
+Original code only: no Google code, assets or branding. No account and no tracking.
