@@ -71,7 +71,7 @@ class PlaybackSessionCallback : MediaSession.Callback {
                 val enabled = args.getBoolean(EXTRA_SKIP_SILENCE, false)
                 (session.player as? androidx.media3.exoplayer.ExoPlayer)?.skipSilenceEnabled = enabled
             }
-            else -> return Futures.immediateFuture(SessionResult(SessionResult.RESULT_ERROR_NOT_SUPPORTED))
+            else -> return Futures.immediateFuture(SessionResult(androidx.media3.session.SessionError.ERROR_NOT_SUPPORTED))
         }
         return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
     }

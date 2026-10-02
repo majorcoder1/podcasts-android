@@ -38,7 +38,10 @@ class NewEpisodeNotifier @Inject constructor(private val context: Context) {
             )
             .build()
 
-        runCatching { manager.notify(NOTIFICATION_ID, notification) }
+        // A denied POST_NOTIFICATIONS permission throws SecurityException, which runCatching absorbs.
+        @android.annotation.SuppressLint("MissingPermission")
+        val result = runCatching { manager.notify(NOTIFICATION_ID, notification) }
+        result.getOrNull()
     }
 
     private fun openAppIntent() = android.app.PendingIntent.getActivity(
