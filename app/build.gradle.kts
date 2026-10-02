@@ -23,11 +23,11 @@ kotlin {
 }
 
 android {
-    namespace = "com.podcasts.app"
+    namespace = "live.fourthepeople.podcasts"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.podcasts.app"
+        applicationId = "live.fourthepeople.podcasts"
         minSdk = 24
         targetSdk = 36
         versionCode = 6

@@ -9,21 +9,21 @@
 -keepclasseswithmembers class kotlinx.serialization.json.** {
     kotlinx.serialization.KSerializer serializer(...);
 }
--keep,includedescriptorclasses class com.podcasts.app.**$$serializer { *; }
--keepclassmembers class com.podcasts.app.** { *** Companion; }
--keepclasseswithmembers class com.podcasts.app.** {
+-keep,includedescriptorclasses class live.fourthepeople.podcasts.**$$serializer { *; }
+-keepclassmembers class live.fourthepeople.podcasts.** { *** Companion; }
+-keepclasseswithmembers class live.fourthepeople.podcasts.** {
     kotlinx.serialization.KSerializer serializer(...);
 }
 
 # Enum names cross the DB boundary: DownloadState is stored as a string and read
 # back with valueOf, so the constants must keep their names.
--keepclassmembers enum com.podcasts.app.** {
+-keepclassmembers enum live.fourthepeople.podcasts.** {
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
 
 # Room entities are mapped by field name.
--keep class com.podcasts.app.data.local.** { *; }
+-keep class live.fourthepeople.podcasts.data.local.** { *; }
 
 # Media3 uses reflection to pick a renderer/extractor set.
 -dontwarn androidx.media3.**

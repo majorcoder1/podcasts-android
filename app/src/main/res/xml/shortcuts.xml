@@ -13,9 +13,9 @@
         android:shortcutShortLabel="@string/shortcut_resume_short"
         android:shortcutLongLabel="@string/shortcut_resume_long">
         <intent
-            android:action="com.podcasts.app.action.RESUME"
-            android:targetPackage="com.podcasts.app"
-            android:targetClass="com.podcasts.app.ui.MainActivity" />
+            android:action="live.fourthepeople.podcasts.action.RESUME"
+            android:targetPackage="live.fourthepeople.podcasts"
+            android:targetClass="live.fourthepeople.podcasts.ui.MainActivity" />
         <categories android:name="android.shortcut.conversation" />
     </shortcut>
 
@@ -26,9 +26,9 @@
         android:shortcutShortLabel="@string/shortcut_new_short"
         android:shortcutLongLabel="@string/shortcut_new_long">
         <intent
-            android:action="com.podcasts.app.action.NEW_EPISODES"
-            android:targetPackage="com.podcasts.app"
-            android:targetClass="com.podcasts.app.ui.MainActivity" />
+            android:action="live.fourthepeople.podcasts.action.NEW_EPISODES"
+            android:targetPackage="live.fourthepeople.podcasts"
+            android:targetClass="live.fourthepeople.podcasts.ui.MainActivity" />
     </shortcut>
 
     <shortcut
@@ -38,9 +38,9 @@
         android:shortcutShortLabel="@string/shortcut_queue_short"
         android:shortcutLongLabel="@string/shortcut_queue_long">
         <intent
-            android:action="com.podcasts.app.action.QUEUE"
-            android:targetPackage="com.podcasts.app"
-            android:targetClass="com.podcasts.app.ui.MainActivity" />
+            android:action="live.fourthepeople.podcasts.action.QUEUE"
+            android:targetPackage="live.fourthepeople.podcasts"
+            android:targetClass="live.fourthepeople.podcasts.ui.MainActivity" />
     </shortcut>
 
     <shortcut
@@ -50,8 +50,8 @@
         android:shortcutShortLabel="@string/shortcut_explore_short"
         android:shortcutLongLabel="@string/shortcut_explore_long">
         <intent
-            android:action="com.podcasts.app.action.EXPLORE"
-            android:targetPackage="com.podcasts.app"
-            android:targetClass="com.podcasts.app.ui.MainActivity" />
+            android:action="live.fourthepeople.podcasts.action.EXPLORE"
+            android:targetPackage="live.fourthepeople.podcasts"
+            android:targetClass="live.fourthepeople.podcasts.ui.MainActivity" />
     </shortcut>
 </shortcuts>
