@@ -11,7 +11,20 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PodcastDao {
-    @Query("SELECT * FROM podcasts WHERE isSubscribed = 1 ORDER BY subscribedAt DESC")
+    /**
+     * The show with the newest episode comes first, so a fresh drop moves its
+     * show to the front. Shows with no episodes yet sort last (NULL is lowest
+     * in SQLite), then by when they were subscribed. Reading episodes here also
+     * makes Room re-emit whenever a refresh adds one.
+     */
+    @Query(
+        """
+        SELECT p.* FROM podcasts p
+        WHERE p.isSubscribed = 1
+        ORDER BY (SELECT MAX(e.publishedAt) FROM episodes e WHERE e.feedUrl = p.feedUrl) DESC,
+                 p.subscribedAt DESC
+        """
+    )
     fun observeSubscriptions(): Flow<List<PodcastEntity>>
 
     @Query("SELECT * FROM podcasts WHERE feedUrl = :feedUrl")

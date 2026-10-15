@@ -1,0 +1,1 @@
+Your subscriptions are now ordered by the newest episode: whichever show dropped most recently comes first, then the next newest, and so on.
